@@ -1,71 +1,41 @@
 from random import sample
 
 
-LETTER_POOL = {
-    'A': 9, 
-    'B': 2, 
-    'C': 2, 
-    'D': 4, 
-    'E': 12, 
-    'F': 2, 
-    'G': 3, 
-    'H': 2, 
-    'I': 9, 
-    'J': 1, 
-    'K': 1, 
-    'L': 4, 
-    'M': 2, 
-    'N': 6, 
-    'O': 8, 
-    'P': 2, 
-    'Q': 1, 
-    'R': 6, 
-    'S': 4, 
-    'T': 6, 
-    'U': 4, 
-    'V': 2, 
-    'W': 2, 
-    'X': 1, 
-    'Y': 2, 
-    'Z': 1
-}
-
-
-SCORE_DICT = {
-    'A': 1,
-    'B': 3,
-    'C': 3,
-    'D': 2,
-    'E': 1,
-    'F': 4,
-    'G': 2,
-    'H': 4,
-    'I': 1,
-    'J': 8,
-    'K': 5,
-    'L': 1,
-    'M': 3,
-    'N': 1,
-    'O': 1,
-    'P': 3,
-    'Q': 10,
-    'R': 1,
-    'S': 1,
-    'T': 1,
-    'U': 1,
-    'V': 4,
-    'W': 4,
-    'X': 8,
-    'Y': 4,
-    'Z': 10
+LETTER_DICT = {
+    'A': {'count': 9, 'score': 1}, 
+    'B': {'count': 2, 'score': 3}, 
+    'C': {'count': 2, 'score': 3}, 
+    'D': {'count': 4, 'score': 2}, 
+    'E': {'count': 12, 'score': 1}, 
+    'F': {'count': 2, 'score': 4}, 
+    'G': {'count': 3, 'score': 2}, 
+    'H': {'count': 2, 'score': 4}, 
+    'I': {'count': 9, 'score': 1}, 
+    'J': {'count': 1, 'score': 8}, 
+    'K': {'count': 1, 'score': 5}, 
+    'L': {'count': 4, 'score': 1}, 
+    'M': {'count': 2, 'score': 3}, 
+    'N': {'count': 6, 'score': 1}, 
+    'O': {'count': 8, 'score': 1}, 
+    'P': {'count': 2, 'score': 3}, 
+    'Q': {'count': 1, 'score': 10}, 
+    'R': {'count': 6, 'score': 1}, 
+    'S': {'count': 4, 'score': 1}, 
+    'T': {'count': 6, 'score': 1}, 
+    'U': {'count': 4, 'score': 1}, 
+    'V': {'count': 2, 'score': 4}, 
+    'W': {'count': 2, 'score': 4}, 
+    'X': {'count': 1, 'score': 8}, 
+    'Y': {'count': 2, 'score': 4}, 
+    'Z': {'count': 1, 'score': 10}
 }
 
 
 def draw_letters():
-    """Returns a list of 10 random letters from LETTER_POOL"""
+    """Returns a list of 10 random letters from LETTER_DICT"""
 
-    letters = LETTER_POOL.keys()
-    frequency = LETTER_POOL.values()
+    letters = LETTER_DICT.keys()
+    frequency = [letter['count'] for letter in LETTER_DICT.values()] 
     
     return sample(letters, counts=frequency, k=10)
 
@@ -77,7 +47,10 @@ def get_letter_count(sequence):
     frequency_dict = {}
 
     for character in sequence:
-        frequency_dict[character] = frequency_dict.get(character, 0) + 1
+        if character not in frequency_dict:
+            frequency_dict[character] = 1
+        else: 
+            frequency_dict[character] += 1
 
     return frequency_dict
 
@@ -99,13 +72,11 @@ def uses_available_letters(word, letter_bank):
 def score_word(word):
     """Return the score of a word according to SCORE_DICT mapping"""
     
-    if len(word) == 0:
-        return 0
-
     score = 0
+
     for letter in word.upper():
-        if letter in SCORE_DICT:
-            score += SCORE_DICT[letter]
+        if letter in LETTER_DICT:
+            score += LETTER_DICT[letter]["score"]
     
     # if the length of the word is 7, 8, 9, or 10 
     # then the word gets an additional 8 points
